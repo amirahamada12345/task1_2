@@ -1,10 +1,6 @@
 @extends('layouts.app')
 
-
-
 @section('title')Show @endsection
-
-
 
 @section('content')
 
@@ -15,8 +11,6 @@
 <div class="card-header">Post Info</div>
 
 <div class="card-body">
-
-
 
 <div class="d-flex ">
 
@@ -32,11 +26,7 @@
 
 </div>
 
-
-
 <br><br>
-
-
 <div class="card">
 
 <div class="card-header">Post Createor Info </div>
@@ -52,8 +42,6 @@
 
 </div>
 
-
-
 <div class="d-flex ">
 
 <h6> Email :&nbsp; </h6>
@@ -61,8 +49,6 @@
 <span> {{ isset($post->user->email) ? $post->user->email: 'Not Found' }} </span>
 
 </div>
-
-
 
 <div class="d-flex ">
 
@@ -74,13 +60,8 @@ $Carbon::parse($post->created_at)->format('l jS \\of F Y h:i:s A'):'Not Found' }
 
 </div>
 
-
-
 </div>
 
 </div>
-
-
-
 
 @endsection

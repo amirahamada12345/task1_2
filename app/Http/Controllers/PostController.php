@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
-
+use App\Http\Requests\StorePostRequest ;
+use App\Http\Requests\UpdatePostRequest;
 class PostController extends Controller
 {
     public function index()
     {
-        $allPosts = Post::simplePaginate(2);
-        // $allPosts = Post::where('title','Test')->get();
+        // $allPosts = Post::simplePaginate(2);
+        $allPosts = Post::with('user')->paginate(4);
+        // $books = Book::with('author')->get();
+        // // $allPosts = Post::where('title','Test')->get();
         // $allPosts = Post::all(); //to retrieve all records
 
         return view('posts.index', [
@@ -28,10 +31,10 @@ class PostController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(StorePostRequest $request )
     {
-        $data = request()->all();
-
+        // $data = request()->all();
+        $data = $request->all();
         // Post::create($data);
         Post::create([
             'title' => $data['title'],
@@ -80,24 +83,38 @@ public function edit($id)
 
 
 
-public function update($postId)
+public function update($postId,UpdatePostRequest $request )
 {
-$data = request()->all();
+    $data = $request->only ( 'title','description','post_creator');
+// $data = request()->all();
 
 // query in db update table set ()=() where id = $postId
+if(isset ( $data )){
 
-$post = Post :: where('id', $postId)-> update([
+$user=User::where('id', $data['post_creator'])->get()->first();
 
-'title' => $data['title'],
+if(isset($user)){
+    Post :: where('id', $postId)-> update([
 
-'description' => $data['description'],
+        'title' => $data['title'],
+        
+        'description' => $data['description'],
+        
+        'user_id' => $data['post_creator'],
+        
+        ]);
 
-'user_id' => $data['post_creator'],
+}
 
-]);
+}else{
+    $data=post::where('id', $postId)->get()->first();
+
+}
+
+
 // dd($data);
 // return redirect()->route('posts.show',$post);
-return redirect()->route('posts.index');
+return redirect()->route('posts.show',$postId);
 }
 
 //************************ */
